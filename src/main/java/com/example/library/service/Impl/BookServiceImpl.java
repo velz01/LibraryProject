@@ -2,11 +2,15 @@ package com.example.library.service.Impl;
 
 import com.example.library.model.Author;
 import com.example.library.model.Book;
+import com.example.library.model.MyUser;
 import com.example.library.repository.AuthorRepository;
 import com.example.library.repository.BookRepository;
+import com.example.library.repository.UserRepository;
+import com.example.library.service.BookInfoService;
 import com.example.library.service.BookService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +22,8 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookInfoService bookInfoService;
     private final AuthorRepository authorRepository;
+    private final UserRepository repository;
+    private PasswordEncoder passwordEncoder;
     @Override
     public List<Book> getBooks() {
         return bookRepository.findAll();
@@ -44,13 +50,13 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book addBook(Book book) throws JsonProcessingException {
         Book infoAboutBook = bookInfoService.getBookInfo(book.getTitle());
-        System.out.println(infoAboutBook);
+
         Optional<Author> existingAuthor = authorRepository.findByAuthorName(infoAboutBook.getAuthor().getAuthorName());
 
-        Author author;
+
         if (existingAuthor.isPresent()) {
             // Используем существующего автора
-            author = existingAuthor.get();
+            Author author = existingAuthor.get();
             book.setAuthor(author);
         } else {
             // Создаем нового автора и сохраняем его в базе
@@ -64,11 +70,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book updateBook(Book book) throws JsonProcessingException {
-//        Book infoAboutBook = bookInfoService.getBookInfo(book.getTitle());
-//        book.setAuthor(infoAboutBook.getAuthor());
-//        book.setDescription(infoAboutBook.getDescription());
         Book infoAboutBook = bookInfoService.getBookInfo(book.getTitle());
-        System.out.println(infoAboutBook);
+
         Optional<Author> existingAuthor = authorRepository.findByAuthorName(infoAboutBook.getAuthor().getAuthorName());
 
         Author author;
@@ -91,6 +94,7 @@ public class BookServiceImpl implements BookService {
     public void deleteBook(int id) {
         bookRepository.deleteBookById(id);
     }
+
 
 //    public static boolean nameCorrect(String authorName) {
 //        int countSpaces = authorName.length() - authorName.replaceAll(" ", "").length();

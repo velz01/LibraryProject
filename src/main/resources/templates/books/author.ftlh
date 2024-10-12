@@ -10,4 +10,6 @@
             </#if>
         </div>
     </#list>
+    <a href="/books" class="btn btn-outline-dark d-block mx-auto mt-2" type="button">Return to main page</a>
+
 </@layout.layout>

@@ -1,8 +1,7 @@
-package com.example.library.service.Impl;
+package com.example.library.service;
 
 import com.example.library.model.Author;
 import com.example.library.model.Book;
-import com.example.library.service.ApiService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
@@ -14,8 +13,8 @@ public class BookInfoService {
     public final ApiService apiService;
 
     public Book getBookInfo(String bookName) throws JsonProcessingException {
-        JsonNode node = apiService.fetchBookData(bookName);
-        Author author = new Author();
+        JsonNode node = apiService.fetchData(bookName);
+        Author author = new Author(); //Factory сделать
         author.setAuthorName("Автор неизвестен");
         Book book = new Book(author, "Описание неизвестно");
         for (int i = 0; i < node.size(); i++) {

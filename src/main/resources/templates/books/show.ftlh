@@ -26,6 +26,8 @@
         <input class="btn btn-dark mt-1" type="submit" value="Delete">
     </form>
 </div>
+    <a href="/books" class="btn btn-outline-dark d-block mx-auto mt-2" type="button">Return to main page</a>
+
 </@layout.layout>
 
 </body>

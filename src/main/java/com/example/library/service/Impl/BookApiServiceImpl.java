@@ -32,7 +32,7 @@ public class BookApiServiceImpl implements ApiService {
 //        return book;
 //
 //    }
-    public JsonNode fetchBookData(String bookName) throws JsonProcessingException {
+    public JsonNode fetchData(String bookName) throws JsonProcessingException {
         String link = getLink(bookName);
         String response = restTemplate.getForObject(link, String.class);
         return mapper.readTree(response);

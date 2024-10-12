@@ -1,11 +1,18 @@
 package com.example.library.controller;
 
 import com.example.library.model.Book;
+
+
+import com.example.library.model.MyUser;
 import com.example.library.service.BookService;
+import com.example.library.service.Impl.BookApiServiceImpl;
 import com.example.library.service.Impl.BookServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +26,9 @@ public class LibraryController {
     @GetMapping
     public String displayAllBooks(Model model) {
         model.addAttribute("books", bookService.getBooks());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String name = auth.getName();
+        model.addAttribute("name", name);
         return "books/index";
     }
 
@@ -51,15 +61,11 @@ public class LibraryController {
         bookService.addBook(book);
         return "redirect:/books";
     }
-    //Trans
 
     @PutMapping("/update/{id}")
     public String updateBook(Book book, @PathVariable int id)  throws JsonProcessingException {
         Book bookToUpdate = bookService.getBook(book.getId());
         bookToUpdate.setTitle(book.getTitle());
-//        bookToUpdate.setAuthor(book.getAuthor());
-
-
         bookService.updateBook(bookToUpdate);
         return "redirect:/books";
     }
@@ -70,12 +76,19 @@ public class LibraryController {
         bookService.deleteBook(id);
         return "redirect:/books";
     }
+    @GetMapping("/welcome")
+    public String displayHomePage() {
+        return "books/welcome";
+    }
+
+
+
 }
 
 @Controller
 class RedirectController {
     @GetMapping
-    public String RedirectToBooks() {
-        return "redirect:/books";
+    public String redirectToBooks() {
+        return "redirect:/books/welcome";
     }
 }
